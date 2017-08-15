@@ -176,7 +176,7 @@ class RegisterEmail extends Component {
 }
 
 /**
- *  Map redux state to component props
+ *   Map redux state to component props
  */
 const mapStateToProps = createStructuredSelector({
   inputFields: selectors.getInputFields(),
