@@ -255,7 +255,7 @@ export function loginFacebook() {
               }).catch(err => console.log(err));
             }
           }).catch((err) => {
-            console.log(err)
+            console.log(err.response)
             dispatch(updateIsFetching(false));
           })
           .catch((err) => { console.log(err.response); });
