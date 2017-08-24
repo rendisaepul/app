@@ -6,6 +6,7 @@ import Schedule from "../Schedule";
 import Speaker from "../Speaker";
 import Ticket from "../TicketList";
 import Profile from "../Profile";
+import { getRoleId } from '../../helpers';
 
 export default class MainTabs extends Component {
   state={
@@ -14,6 +15,9 @@ export default class MainTabs extends Component {
 
   handleCurrentTab = (number) => {
     this.setState({currentTab: number})
+  }
+  componentWillMount() {
+    console.log(getRoleId(), ' ini role id masss')
   }
 
   render() {
