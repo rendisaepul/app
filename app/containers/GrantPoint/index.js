@@ -8,7 +8,8 @@ import {
   Input,
   Icon,
   Button,
-  Text
+  Text,
+  Spinner
 } from 'native-base';
 
 // import redux components
@@ -22,49 +23,17 @@ import styles from './styles';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
-const events = [
-  {
-    title: 'Grand Opening Devsummit',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam vel dolorum, at, laboriosam repudiandae quod aliquid odit aliquam ab eligendi!',
-    stage: 'Main Stage',
-    time_start: '2017-08-09 10:00:00',
-    time_end: '2017-08-09 13:00:00'
-  },
-  {
-    title: 'Launch and ISOMA',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam vel dolorum, at, laboriosam repudiandae quod aliquid odit aliquam ab eligendi!',
-    stage: 'Eduplex lt.1',
-    time_start: '2017-08-09 13:00:00',
-    time_end: '2017-08-09 14:00:00'
-  },
-  {
-    title: 'Talkshow 1',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam vel dolorum, at, laboriosam repudiandae quod aliquid odit aliquam ab eligendi!',
-    stage: 'Main Stage',
-    time_start: '2017-08-09 14:00:00',
-    time_end: '2017-08-09 16:00:00'
-  },
-  {
-    title: 'Interactive Game 1',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam vel dolorum, at, laboriosam repudiandae quod aliquid odit aliquam ab eligendi!',
-    stage: 'Eduplex lt.3',
-    time_start: '2017-08-09 16:00:00',
-    time_end: '2017-08-09 17:00:00'
-  },
-  {
-    title: 'Interactive Game 1',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam vel dolorum, at, laboriosam repudiandae quod aliquid odit aliquam ab eligendi!',
-    stage: 'Eduplex lt.3',
-    time_start: '2017-08-09 16:00:00',
-    time_end: '2017-08-09 17:00:00'
-  }
-];
-
 class GrantPoint extends Component {
   componentWillMount() {
     this.props.getAttendees()
   }
+  onClickTransfer = (id, points) => {
+    this.props.transferPoints(id, points)
+  }
   render() {
+    if (this.props.isGettingAttendees) {
+      return <Spinner color='orange' />
+    }
     return (
       <View style={styles.container}>
         <HeaderPoint
@@ -82,7 +51,7 @@ class GrantPoint extends Component {
           </Header>
           <Content>
             <View style={styles.cards}>
-              { true ? (<GrantPointList events={events} />) : (
+              { this.props.attendeesData.length > 0 ? (<GrantPointList onClickTransfer={this.onClickTransfer} events={this.props.attendeesData} />) : (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                   <Text style={{ color: '#3a3a3a' }}>- No Grant Point -</Text>
                 </View>
