@@ -14,7 +14,7 @@ const selectGrantPointReducer = () => state => state.get('grantPoint');
  */
 export const getAttendees = () => createSelector(
   selectGrantPointReducer(),
-  state => state.get('attendeesData').toJS()
+  state => state.get('attendeesData')
 );
 
 /**
