@@ -205,7 +205,9 @@ class Main extends Component {
     );
   }
 }
+
 Main.propTypes = {
+
   isLoggedIn: PropTypes.bool.isRequired,
   updateIsLogIn: PropTypes.func.isRequired,
   isSubscribed: PropTypes.bool.isRequired,
@@ -220,6 +222,7 @@ Main.propTypes = {
   loginGoogle: PropTypes.func.isRequired,
   loginTwitter: PropTypes.func.isRequired
 };
+
 /**
  *  Map redux state to component props
  */
@@ -229,4 +232,5 @@ const mapStateToProps = createStructuredSelector({
   isLoggedIn: selectors.getIsLoggedIn(),
   isFetching: selectors.getIsFetching()
 });
+
 export default connect(mapStateToProps, actions)(Main);
