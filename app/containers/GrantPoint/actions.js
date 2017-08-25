@@ -1,5 +1,6 @@
 import {
-  DevSummitAxios
+  DevSummitAxios,
+  getAccessToken
 } from '../../helpers';
 
 import {
@@ -39,17 +40,20 @@ export function getAttendees() {
 }
 
 export function transferPoints(receiver_id, points) {
-  return (dispatch) => {
-    dispatch(isGettingAttendees(true))
-    DevSummitAxios.post('api/v1/points/transfer',
-      { Authorization:  },
-      { receiver_id, points })
-      .then((response) => {
-        // dispatch(getAttendees());
-        console.log(response, 'ini success')
-        dispatch(isGettingAttendees(false));
-      }).catch((error) => {
-        console.log('error : ', error)
-      })
-  }
+  getAccessToken().then((accessToken) => {
+    console.log('ini access : ', accessToken);
+  });
+
+  // return (dispatch) => {
+  //   dispatch(isGettingAttendees(true))
+  //   DevSummitAxios.post('api/v1/points/transfer',
+  //     { receiver_id, points })
+  //     .then((response) => {
+  //       // dispatch(getAttendees());
+  //       console.log(response, 'ini success')
+  //       dispatch(isGettingAttendees(false));
+  //     }).catch((error) => {
+  //       console.log('error : ', error)
+  //     })
+  // }
 }
