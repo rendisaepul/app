@@ -78,7 +78,6 @@ export function disabled() {
 
 export function logOut() {
   return async (dispatch, getState) => {
-    console.log('actionsss')
     const keys = [ 'access_token', 'refresh_token', 'role_id', 'profile_data' ];
     await AsyncStorage.multiRemove(keys);
     dispatch(updateIsLogOut(true));
