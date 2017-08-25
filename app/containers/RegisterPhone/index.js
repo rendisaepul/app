@@ -30,7 +30,7 @@ import * as actions from './actions';
 import * as selectors from './selectors';
 
 // import constants
-import { role_option, primaryColor } from '../../constants';
+import { role_option, PRIMARYCOLOR } from '../../constants';
 
 
 class RegisterPhone extends Component {
