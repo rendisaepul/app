@@ -1,6 +1,6 @@
 import { AsyncStorage } from 'react-native';
 
-import { DevSummitAxios } from '../../helpers';
+import { DevSummitAxios, getAccessToken } from '../../helpers';
 import {
   UPDATE_SINGLE_FIELD,
   UPDATE_IS_PROFILE_UPDATED,
@@ -48,20 +48,21 @@ export function changeProfile() {
     const { fields } = getState().get('profile').toJS();
     const { username, firstName, lastName, profilePic } = fields;
 
-    AsyncStorage.getItem('access_token', (err, result) => {
-      DevSummitAxios.patch('/auth/me/changesetting', {
-        first_name: firstName,
-        last_name: lastName
-      }, {
-        headers: {
-          Authorization: result
-        }
-      }).then((response) => {
-        if (response && response.data && response.data.meta.success) {
-          dispatch(updateIsProfileUpdated(true));
-        }
-      }).catch((error) => { console.log(error); });
-    });
+    getAccessToken()
+      .then((token) => {
+        DevSummitAxios.patch('/auth/me/changesetting', {
+          first_name: firstName,
+          last_name: lastName
+        }, {
+          headers: {
+            Authorization: token
+          }
+        }).then((response) => {
+          if (response && response.data && response.data.meta.success) {
+            dispatch(updateIsProfileUpdated(true));
+          }
+        }).catch((error) => { console.log(error); });
+      });
   };
 }
 

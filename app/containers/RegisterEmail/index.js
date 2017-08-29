@@ -2,29 +2,28 @@ import React, { Component } from 'react';
 import {
   Container,
   Content,
-  Form,
   Picker,
   Item,
-  Label,
-  Input,
   Button,
   Text
 } from 'native-base';
-import { Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {Actions} from 'react-native-router-flux';
+import { Alert, Image, View } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
 // import redux components
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import InputItem from '../../components/InputItem';
+import AuthLogo from '../../components/AuthLogo';
 import styles from './styles';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
 // import constants
 import { role_option } from '../../constants';
+
+const background = require('../../../assets/images/background.png');
 
 class RegisterEmail extends Component {
 
@@ -42,23 +41,31 @@ class RegisterEmail extends Component {
     }
   }
 
-  handleInputChange = (field, value) => {
-    this.props.updateInputFields(field, value);
-    this.props.updateErrorFields(`error_${field}`, value = !(value.length > 0));
-  }
-
-  handleButtonClick = (value) => {
-    this.props.updateRegisterMethod(value);
-  }
-
-  submitRegistration = () => {
-    if (this.isFieldError()) {
-      Alert.alert('Warning', 'Field is not complete');
-    } else {
-      this.props.register();
+  componentWillReceiveProps(prevProps) {
+    if (prevProps.isRegistering !== this.props.isRegistering) {
+      console.log('isregistering...');
+      return;
+    }
+    if (prevProps.isRegistered.status !== this.props.isRegistered.status) {
+      Alert.alert(
+        this.props.isRegistered.title,
+        this.props.isRegistered.message,
+        [
+          { text: 'OK', onPress: this.props.isRegistered.title === 'Failed' ? () => {} : this.onAlertOk }
+        ],
+        { cancelable: false }
+      );
+      this.props.updateRegisterStatus(false, '', '');
     }
   }
 
+  componentWillUnmount() {
+    this.props.resetState()
+  }
+
+  onAlertOk = () => {
+    Actions.main();
+  }
   /*
     * validate all fields before submission
     */
@@ -83,27 +90,24 @@ class RegisterEmail extends Component {
     );
   }
 
-  onAlertOk = () => {
-    Actions.main();
+  submitRegistration = () => {
+    if (this.isFieldError()) {
+      Alert.alert('Warning', 'Field is not complete');
+    } else {
+      this.props.register();
+    }
+  }
+
+  handleButtonClick = (value) => {
+    this.props.updateRegisterMethod(value);
+  }
+
+  handleInputChange = (field, value) => {
+    this.props.updateInputFields(field, value);
+    this.props.updateErrorFields(`error_${field}`, value = !(value.length > 0));
   }
 
   render() {
-    if (this.props.isRegistering) {
-      console.log('isregistering...');
-      return;
-    }
-    if (this.props.isRegistered) {
-      Alert.alert('Status', 'user registered successfully');
-      Alert.alert(
-        'Status',
-        'user registered successfully',
-        [
-          { text: 'OK', onPress: this.onAlertOk }
-        ],
-        { cancelable: false }
-      );
-    }
-
     // destructure state
     const { registerMethod, inputFields, errorFields } = this.props || {};
     const {
@@ -127,64 +131,88 @@ class RegisterEmail extends Component {
     } = errorFields || false;
 
     return (
-      <Container style={styles.container}>
-        <Content>
-          <InputItem
-            error={error_first_name}
-            title="First Name"
-            onChangeText={text => this.handleInputChange('first_name', text)}
-            value={first_name}
-          />
-          <InputItem
-            error={error_last_name}
-            title="Last Name"
-            onChangeText={text => this.handleInputChange('last_name', text)}
-            value={last_name}
-          />
-          <InputItem
-            error={error_email}
-            title="Email"
-            onChangeText={text => this.handleInputChange('email', text)}
-            value={email}
-          />
-          <InputItem
-            error={error_username}
-            title="Username"
-            onChangeText={text => this.handleInputChange('username', text)}
-            value={username}
-          />
-          <InputItem
-            error={error_password}
-            title="Password"
-            onChangeText={text => this.handleInputChange('password', text)}
-            value={password}
-            secureTextEntry
-          />
-          <Picker
-            style={styles.picker}
-            placeholder="Role"
-            mode="dropdown"
-            selectedValue={role}
-            onValueChange={value => this.handleInputChange('role', value)}
-          >
-            {role_option.map(component => (
-              <Item
-                key={component.value}
-                label={component.label}
-                value={component.label}
+      <Image style={styles.background} source={background}>
+        <Container style={styles.container}>
+          <Content>
+            <AuthLogo />
+            <View style={styles.formSection}>
+              <InputItem
+                error={error_first_name}
+                style={styles.formInput}
+                placeholder="First name"
+                placeholderTextColor={'#BDBDBD'}
+                onChangeText={text => this.handleInputChange('first_name', text)}
+                value={first_name}
               />
-            ))}
-          </Picker>
-          <Button
-            primary
-            block
-            style={styles.button}
-            onPress={() => this.submitRegistration()}
-          >
-            <Text style={styles.buttomText}>Register with Email</Text>
-          </Button>
-        </Content>
-      </Container>
+              <InputItem
+                error={error_last_name}
+                style={styles.formInput}
+                placeholder="Last name"
+                placeholderTextColor={'#BDBDBD'}
+                onChangeText={text => this.handleInputChange('last_name', text)}
+                value={last_name}
+              />
+              <InputItem
+                error={error_email}
+                style={styles.formInput}
+                placeholder="Email"
+                placeholderTextColor={'#BDBDBD'}
+                onChangeText={text => this.handleInputChange('email', text)}
+                value={email}
+              />
+              <InputItem
+                error={error_username}
+                style={styles.formInput}
+                placeholder="Username"
+                placeholderTextColor={'#BDBDBD'}
+                onChangeText={text => this.handleInputChange('username', text)}
+                value={username}
+              />
+              <InputItem
+                error={error_password}
+                style={styles.formInput}
+                placeholder="Password"
+                placeholderTextColor={'#BDBDBD'}
+                secureTextEntry
+                onChangeText={text => this.handleInputChange('password', text)}
+                value={password}
+              />
+            </View>
+            <View style={styles.pickerWrapper}>
+              <Picker
+                style={styles.picker}
+                placeholder="Role"
+                mode="dropdown"
+                selectedValue={role}
+                onValueChange={value => this.handleInputChange('role', value)}
+              >
+                {role_option.map(component => (
+                  <Item
+                    key={component.value}
+                    label={component.label}
+                    value={component.label}
+                  />
+                ))}
+              </Picker>
+            </View>
+            <Button
+              block
+              style={styles.button}
+              onPress={() => this.submitRegistration()}
+            >
+              <Text style={styles.buttomText}>Register</Text>
+            </Button>
+            <Button
+              transparent
+              style={styles.buttonRegister}
+              onPress={() => { Actions.main(); }}
+            >
+              <Text style={styles.registerText}>{'Already have account?'}</Text>
+              <Text style={styles.registerTextBold}>{'Sign In'}</Text>
+            </Button>
+          </Content>
+        </Container>
+      </Image>
     );
   }
 }

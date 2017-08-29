@@ -5,6 +5,7 @@ import {
   Content,
   Text
 } from 'native-base';
+import { View, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Actions } from 'react-native-router-flux';
 import { twitter } from 'react-native-simple-auth';
@@ -14,11 +15,13 @@ import { twitter } from 'react-native-simple-auth';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import Button from '../../components/Button'
+import Button from '../../components/Button';
+import AuthLogo from '../../components/AuthLogo';
 import styles from './styles';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
+const background = require('../../../assets/images/background.png');
 
 class RegisterMenu extends Component {
   registerFacebook = () => {
@@ -31,31 +34,69 @@ class RegisterMenu extends Component {
 
   render() {
     return (
-      <Container style={styles.container}>
-        <Content>
-          <Text style={styles.title}>Register with: </Text>
-          <Button block style={styles.button} onPress={() => { this.registerFacebook(); }} >
-            <Icon name="facebook" color="white" style={styles.icon} />
-            <Text style={styles.buttonText} >Facebook</Text>
-          </Button>
-          <Button info block style={styles.button} onPress={this.registerTwitter} >
-            <Icon name="twitter" color="white" style={styles.icon} />
-            <Text style={styles.buttonText} >Twitter</Text>
-          </Button>
-          <Button danger block style={styles.button} onPress={() => { this.props.registerGoogle(); }}>
-            <Icon name="google-plus" color="white" style={styles.icon} />
-            <Text style={styles.buttonText} >Google</Text>
-          </Button>
-          <Button warning block style={styles.button} onPress={() => { Actions.registerEmail(); }}>
-            <Icon name="envelope" color="white" style={styles.icon} />
-            <Text style={styles.buttonText}>Email</Text>
-          </Button>
-          <Button success block style={styles.button} onPress={() => { Actions.registerPhone(); }}>
-            <Icon name="phone" color="white" style={styles.icon} />
-            <Text style={styles.buttonText}>Phone</Text>
-          </Button>
-        </Content>
-      </Container>
+      <Image style={styles.background} source={background}>
+        <Container style={styles.container}>
+          <Content>
+            <AuthLogo />
+            <View style={styles.lineSection}>
+              <View style={styles.lineTextThree} />
+              <Text style={styles.lineTextFour}> Register with social media </Text>
+              <View style={styles.lineTextThree} />
+            </View>
+            <View style={styles.buttonSocialSection}>
+              <Button
+                block
+                style={styles.buttonSocial}
+                onPress={() => { this.registerFacebook(); }}
+              >
+                <Icon name="facebook" color="white" style={styles.iconSocial} />
+              </Button>
+              <Button
+                info
+                block
+                style={styles.buttonSocial}
+                onPress={this.registerTwitter}
+              >
+                <Icon name="twitter" color="white" style={styles.iconSocial} />
+              </Button>
+              <Button
+                danger
+                block
+                style={styles.buttonSocial}
+                onPress={() => { this.props.registerGoogle(); }}
+              >
+                <Icon name="google-plus" color="white" style={styles.iconSocial} />
+              </Button>
+            </View>
+            <View style={styles.lineSection}>
+              <View style={styles.lineTextOne} />
+              <Text style={styles.lineTextTwo}> or </Text>
+              <View style={styles.lineTextOne} />
+            </View>
+            <Button
+              warning
+              block
+              style={styles.button}
+              onPress={() => { Actions.registerEmail(); }}
+            >
+              <Icon name="envelope" color="white" style={styles.icon} />
+              <Text style={styles.buttonText}>Register with Email</Text>
+            </Button>
+            <Button style={[ styles.button, { backgroundColor: '#FFD740' } ]} onPress={() => { Actions.registerPhone(); }}>
+              <Icon name="phone" color="white" style={styles.icon} />
+              <Text style={styles.buttonText}>Register with Phone</Text>
+            </Button>
+          </Content>
+        </Container>
+        <Button
+          transparent
+          style={styles.buttonRegister}
+          onPress={() => { Actions.main(); }}
+        >
+          <Text style={styles.registerText}>{'Already have account?'}</Text>
+          <Text style={styles.registerTextBold}>{'Sign In'}</Text>
+        </Button>
+      </Image>
     );
   }
 }
